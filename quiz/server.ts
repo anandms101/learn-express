@@ -70,6 +70,19 @@ app.get('/read/usernames', (req: UserRequest, res: Response) => {
   res.send(usernames);
 });
 
+app.use('/read/username/:name', addMsgToRequest);
+
+// endpoint to fetch email by username
+app.get('/read/username/:name', (req: UserRequest, res: Response) => {
+  const userName = req.params.name;
+  const user = req.users?.find(u => u.username === userName);
+  if (user) {
+    res.send([{ id: String(user.id), email: user.email }]);
+  } else {
+    res.send([]);
+  }
+});
+
 // a middleware function that parses the request body to json
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
